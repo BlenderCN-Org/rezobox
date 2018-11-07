@@ -1,0 +1,7 @@
+#!/bin/bash
+# -*- coding: UTF-8 -*-
+
+
+cd rezobox_server
+
+python3 rezobox_server.py

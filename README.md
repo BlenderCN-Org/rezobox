@@ -1,6 +1,14 @@
 # rezobox
 Creuser et trouver les tuyaux, semblable à AR Sandbox
 
+### Documentation
+* [RezObox]()
+
+### Version de python
+
+* Le serveur et la Kinect sont en python2
+* Les scripts dans le Blender Game Engine sont en python3
+
 ### License and Copyright
 
 This game is under Creative Commons Attribution-ShareAlike 3.0 Unported License.

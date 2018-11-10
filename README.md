@@ -1,5 +1,15 @@
 # rezobox
-Creuser et trouver les tuyaux, semblable à AR Sandbox
+Creuser et trouver des réseaux post-neuronaux.
+
+
+### Très inspiré de AR Sandbox
+
+### Principe
+
+* Capture par une Kinect avec des scripts python2, opencv, twisted
+* Envoi d'une image en niveau de gris de 100x75 pixels en TCP en local
+* Réception dans le Blender Game Engine avec des scripts en python3
+* Pour chaque pixel, un plan est ajouté qui masque l'image en dessous
 
 ### Documentation
 * [RezObox](https://ressources.labomedia.org/rezobox)
@@ -25,26 +35,26 @@ More in file License GPL V3.
 sudo apt-get install blender
 ~~~
 
-### Installation de twisted pour python 3
-#### Dépendances
+#### Python
 ~~~text
 sudo apt-get install python-dev python-setuptools
-~~~
 
-#### Installation
-~~~text
 sudo pip install twisted
-~~~
-
-sudo pip install scipy
 sudo pip install opencv
 sudo pip install numpy
 
+sudo apt-get install python3-dev python3-setuptools
+sudo pip3 install opencv
+sudo pip3 install numpy
+sudo pip3 install twisted
+~~~
 
-## Exécution du jeu
+### Exécution du jeu
+#### Kinect
+Double clic sur clic_to_run_kinect
 
+#### Blender
 Double clic sur clic_to_run_game
-Ces scripts doivent être excécutable.
 
 ### Merci à:
 

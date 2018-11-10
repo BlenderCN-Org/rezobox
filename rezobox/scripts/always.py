@@ -31,6 +31,20 @@ import scripts.blendergetobject
 import scripts.blenderviewport
 
 
+def droiteAffine(x1, y1, x2, y2):
+    """
+    Retourne les valeurs de a et b de y=ax+b
+    à partir des coordonnées de 2 points.
+    """
+
+    a = (y2 - y1) / (x2 - x1)
+    b = y1 - (a * x1)
+    return a, b
+
+# 0 à 20 => 1.55, 94 => -1.5
+A, B = droiteAffine(20, 1.55, 94, -1.48)
+print(A, B)
+
 def get_server_message():
     # 0.050 s
     t0 = time()
@@ -38,13 +52,14 @@ def get_server_message():
     try:
         data = gl.clt.listen(16384)
         print("\nMessage reçu: taille =", str(sys.getsizeof(data)))
-        gl.clt.clear_buffer(16384)
+        # Prends beucoup trop de temps
+        #gl.clt.clear_buffer(16384)
     except:
         data = None
         print("Pas de réception sur le client TCP")
     print("    en {0:.2f} seconde".format(time() - t0))
     print("Durée d' un cycle = {0:.2f} seconde".format(time() - gl.tzero))
-    print("    soit un FPS de {0:.1f}".format(51/(time() - gl.tzero)))
+    print("    soit un FPS de {0:.0f}".format(51/(time() - gl.tzero)))
     gl.tzero = time()
     return data
 
@@ -108,14 +123,18 @@ def add_one_row_planes(image, row, all_obj, game_scn):
         # image[h][0] de 0 à 94
         p = image[h][0]
 
-        # 0 == 1.55, 94 == -1.5 0,03244
-        z = -0.03244 * p + 1.55
+        # 0 à 20 => 1.55, 94 => -1.5
+        if p <= 20:
+            z = 1.55
+        else:
+            a, b = -0.04094, 2.3689
+            z = a * p + b
   
         # Ajout
         add_object("Plane", (x, y, z), gl.life, all_obj, game_scn)
 
 def add_planes():
-    """ Ajout des plans par n colonnes
+    """ Ajout des plans par 2 colonnes
     """
     # nombre de colonne par frame = 2
     ncpf = 2
@@ -143,7 +162,6 @@ def add_planes():
             # ajout de la colonne
             add_one_row_planes(image_parts, row+1, all_obj, game_scn)
 
-
 def main():
     """
     frame 0 update réseau
@@ -166,4 +184,4 @@ def main():
     # Effacement du tampon au début
     if gl.tempoDict["360"].tempo == 60:
         all_obj = scripts.blendergetobject.get_all_objects()
-        hide_tampon(all_obj)
+        #hide_tampon(all_obj)

@@ -23,7 +23,8 @@ class Kinect(object):
         self.width = int(self.conf["image"]["y"])
         self.mini = int(self.conf["image"]["mini"])
         self.maxi = int(self.conf["image"]["maxi"])
-
+        self.default_image = get_default_image()
+        
     def get_RGB_video(self):
         """
         Get RGB image from kinect
@@ -36,8 +37,13 @@ class Kinect(object):
         """
         Get depth image from kinect
         """
-        array, integer = freenect.sync_get_depth()
+        try:
+            array, integer = freenect.sync_get_depth()
+        except:
+            array = self.default_image
+            
         array = np.array(array, dtype=np.uint8)
+        
         return array
 
     def get_sandbox(self, depth):
@@ -75,7 +81,7 @@ class Display(object):
         print("Display initié")
 
     def one_loop(self):
-        frame = self.kinect.get_RGB_video()
+        #frame = self.kinect.get_RGB_video()
         depth = self.kinect.get_depth()
 
         cropped = self.kinect.get_cropped(depth)
@@ -96,7 +102,7 @@ class Display(object):
             
     def infinite_loop(self):
         while self.loop:
-            frame = self.kinect.get_RGB_video()
+            #frame = self.kinect.get_RGB_video()
             depth = self.kinect.get_depth()
 
             cropped = self.kinect.get_cropped(depth)
@@ -117,6 +123,11 @@ class Display(object):
                 
         cv2.destroyAllWindows()
 
+
+def get_default_image():
+    img = cv2.imread("./images/depth_640_480.png", 0)
+    print("Default image", img.size, img.shape)
+    return img
 
 def change_resolution(img, (x, y)):
     return cv2.resize(img, (x, y), interpolation=cv2.INTER_AREA)

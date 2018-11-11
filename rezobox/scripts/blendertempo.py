@@ -23,6 +23,8 @@
 
 """
 Class utilisable pour des tempo et compteur dans Blender.
+TODO:
+Gros bug: pour tempo n --> compte n+1 !!!!!!!!!!!!!!!!!!
 """
 
 class VirtualGl:

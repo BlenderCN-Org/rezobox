@@ -2,14 +2,14 @@
 Creuser et trouver des réseaux post-neuronaux.
 
 
-### Très inspiré de AR Sandbox
+### Très inspiré de [AR Sandbox](https://arsandbox.ucdavis.edu/)
 
 ### Principe
 
-* Capture par une Kinect avec des scripts python2, opencv, twisted
-* Envoi d'une image en niveau de gris de 100x75 pixels en TCP en local
+* Capture par une Kinect avec des scripts python2, opencv, twisted.
+* Envoi d'une image en niveau de gris de 100x75 pixels en TCP en local.
 * Réception dans le Blender Game Engine avec des scripts en python3
-* Pour chaque pixel, un plan est ajouté qui masque l'image en dessous
+* Pour chaque pixel, un plan est ajouté qui masque l'image en dessous. La position verticale du plan est fonction de la capture Kinect.
 
 ### Documentation
 * [RezObox](https://ressources.labomedia.org/rezobox)
@@ -26,8 +26,9 @@ This game is under Creative Commons Attribution-ShareAlike 3.0 Unported License.
 All scripts are under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 More in file License GPL V3.
 
-## Testé sur
+## Contexte
 * Debian Stretch 9.3  avec Blender 2.79
+* Novembre 2018
 
 ### Installation
 #### Blender
@@ -38,7 +39,6 @@ sudo apt-get install blender
 #### Python
 ~~~text
 sudo apt-get install python-dev python-setuptools
-
 sudo pip install twisted
 sudo pip install opencv
 sudo pip install numpy

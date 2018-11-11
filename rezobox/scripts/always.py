@@ -28,7 +28,6 @@ import cv2
     
 from bge import logic as gl
 import scripts.blendergetobject
-import scripts.blenderviewport
 
 
 def droiteAffine(x1, y1, x2, y2):

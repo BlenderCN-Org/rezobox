@@ -1,6 +1,21 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
+########################################################################
+# This file is part of rezobox.
+#
+# rezobox is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# rezobox is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+########################################################################
+
 """
 kinect à 147 cm du fond du bac
 """
@@ -125,7 +140,8 @@ class Display(object):
 
 
 def get_default_image():
-    img = cv2.imread("./images/depth_640_480.png", 0)
+    scr = os.path.dirname(os.path.abspath(__file__))
+    img = cv2.imread(scr + "/images/depth_640_480.png", 0)
     print("Default image", img.size, img.shape)
     return img
 

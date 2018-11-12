@@ -42,7 +42,6 @@ def droiteAffine(x1, y1, x2, y2):
 
 # 0 à 20 => 1.55, 94 => -1.5
 A, B = droiteAffine(20, 1.55, 94, -1.48)
-print(A, B)
 
 def get_server_message():
     # 0.050 s
@@ -161,6 +160,15 @@ def add_planes():
             # ajout de la colonne
             add_one_row_planes(image_parts, row+1, all_obj, game_scn)
 
+def hide_herbe(all_obj):
+    """all_obj = list des noms de tous les objets"""
+    for obj in all_obj:
+        if "herbe" in obj:
+            test = ["8", "7", "6"]
+            for t in test:
+                if t in obj:
+                    all_obj[obj].visible = False
+
 def main():
     """
     frame 0 update réseau
@@ -169,13 +177,13 @@ def main():
     # Update des tempo
     gl.tempoDict.update()
     
-    if gl.tempoDict["cycle"].tempo == 0:
+    # #if gl.tempoDict["cycle"].tempo == 0:
         
-        print("Update game with data server")
-        data = get_server_message()
+        # #print("\nUpdate game with data server")
+        # #data = get_server_message()
         
-        if data:
-            gl.image = get_image(data)
+        # #if data:
+            # #gl.image = get_image(data)
 
     # Ajout des plans pour cycle de 1 à 50 compris
     add_planes()
@@ -183,4 +191,4 @@ def main():
     # Effacement du tampon au début
     if gl.tempoDict["360"].tempo == 60:
         all_obj = scripts.blendergetobject.get_all_objects()
-        #hide_tampon(all_obj)
+        hide_herbe(all_obj)

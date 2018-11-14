@@ -106,7 +106,7 @@ class Display(object):
         self.msg = array_to_bytes(detected)
         
         # #cv2.imshow('RGB image',frame)
-        big = change_resolution(detected, (1066, 800))
+        big = change_resolution(detected, (640, 480))
         cv2.imshow('Kinect', big)
             
         # quit program when 'esc' key is pressed

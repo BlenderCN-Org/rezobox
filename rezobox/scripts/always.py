@@ -44,7 +44,6 @@ def droiteAffine(x1, y1, x2, y2):
 A, B = droiteAffine(20, 1.55, 94, -1.48)
 
 def get_server_message():
-    # 0.050 s
     t0 = time()
     gl.clt.re_connect_sock()
     try:
@@ -56,9 +55,7 @@ def get_server_message():
         data = None
         print("Pas de réception sur le client TCP")
     print("    en {0:.2f} seconde".format(time() - t0))
-    print("Durée d' un cycle = {0:.2f} seconde".format(time() - gl.tzero))
-    print("    soit un FPS de {0:.0f}".format(51/(time() - gl.tzero)))
-    gl.tzero = time()
+    
     return data
 
 def get_image(data):
@@ -95,11 +92,8 @@ def add_object(obj, position, life, all_obj, game_scn):
     """
     empty = all_obj['Empty']
     empty.worldPosition = position
-    game_scn.addObject(obj, empty, life)
+    object_added = game_scn.addObject(obj, empty, life)
     
-def hide_tampon(all_obj):
-    all_obj["tampon"].visible = False
-
 def add_one_row_planes(image, row, all_obj, game_scn):
     """
         Ajout les plans d'une image de 1 colonne en position x = row
@@ -123,11 +117,13 @@ def add_one_row_planes(image, row, all_obj, game_scn):
 
         # 0 à 20 => 1.55, 94 => -1.5
         if p <= 20:
-            z = 1.55
+            z = 1.45
         else:
             a, b = -0.04094, 2.3689
             z = a * p + b
-  
+            if z > 1.48:
+                z = 1.48
+                
         # Ajout
         add_object("Plane", (x, y, z), gl.life, all_obj, game_scn)
 
@@ -160,15 +156,97 @@ def add_planes():
             # ajout de la colonne
             add_one_row_planes(image_parts, row+1, all_obj, game_scn)
 
-def hide_herbe(all_obj):
-    """all_obj = list des noms de tous les objets"""
+def hide_herbe_good(all_obj):
+    """Division d'un plan texturé:
+    https://blender.stackexchange.com/questions/1437/subdivide-and-separate-face-into-different-meshes
+
+    In Edit mode -> Select the face
+    W -> Subdivde -> tool shelf T or F6 -> Number of Cuts (in your case 3)
+    With the subdivided faces selected -> Ctrl + E -> mark sharp
+    Add edge split modifier -> uncheck edge angle
+    In Object mode apply the edge split modifier
+    (optional) in Edit mode -> select the faces if not selected -> Ctrl + E -> clear sharp
+    In Edit mode -> P -> separate by loose parts (séparer par partie mal fixée, pas attachées)
+
+    objet herbe = coordonnées X, Y
+    """
+    if gl.image is not None:
+        n = 40
+        # Diminution de la résolution de l'image
+        img = cv2.resize(gl.image, (n, n), interpolation=cv2.INTER_AREA)
+        # Mirror sur x: 0 = h, 1 = v, -1 = both
+        img = cv2.flip(img, 0)
+
+        gray_list = []
+        points_list = []
+        gray_ref = gl.conf["image"]["gray"]
+        # Parcours des objets "herbe"
+        for obj in all_obj:
+            if "herbe" in obj:
+                x_herbes, y_herbes = get_position(all_obj[obj])
+
+                # box = 11, 8.25
+                # x_herbes de -5.5 à + 5.5
+                # largeur 11 de blender = 40 pixels
+                # de 0 à 43, il faut 0 à 39 inclus
+                x = int(4 * (x_herbes + 5.5) * 39 / 43)
+
+                # hauteur 8.25 de blenbder = 40 pixels
+                # de 0 à 30, il faut 0 à 39 inclus
+                y = int(4 * (y_herbes + 4.125) * 36 / 30)
+                
+                points_list.append(x)
+                
+                gray = img[y][x]
+                gray_list.append(gray)
+                
+                if gray >= gray_ref:
+                    all_obj[obj].visible = False
+                else:
+                    all_obj[obj].visible = True
+                    
+        # #print(gray_list)
+        # #print(points_list)
+                    
+def hide_herbe_simple(all_obj):
+    """Cache tout"""
     for obj in all_obj:
         if "herbe" in obj:
-            test = ["8", "7", "6"]
-            for t in test:
-                if t in obj:
-                    all_obj[obj].visible = False
+            all_obj[obj].visible = False
 
+def get_position(plan):
+    """Le centre de l'objet est 0,0,0
+    je calcule la position d e la moyenne des 4 vertices du plan
+    """
+    # Liste de 4 liste de 3
+    vl = get_plane_vertices_position(plan)
+
+    # Moyenne des x
+    x = (vl[0][0] + vl[2][0])/2
+    # Moyenne des y
+    y = (vl[0][1] + vl[1][1])/2
+        
+    return x, y
+
+def get_plane_vertices_position(obj):
+    """Retourne les coordonnées des vertices d'un plan
+    [[5.5, -4.125, 1.5], [5.5, -3.375, 1.5], [4.5, -3.375, 1.5],
+                                                    [4.5, -4.125, 1.5]]
+    """
+    verts = []
+    a = 0
+    for mesh in obj.meshes:
+        a += 1
+        for m_index in range(len(mesh.materials)):
+            for v_index in range(mesh.getVertexArrayLength(m_index)):
+                verts.append(mesh.getVertex(m_index, v_index))
+
+    vertices_list = []
+    for i in range(4):
+        vertices_list.append([verts[i].x, verts[i].y, verts[i].z])
+
+    return vertices_list
+    
 def main():
     """
     frame 0 update réseau
@@ -176,19 +254,25 @@ def main():
     """
     # Update des tempo
     gl.tempoDict.update()
+
+    if gl.tempoDict["cycle"].tempo == 0:
+        # calcul du FPS
+        t = time()
+        print("Durée d' un cycle = {0:.2f} seconde".format(t - gl.tzero))
+        print("    soit un FPS de {0:.0f}".format(51/(t - gl.tzero)))
+        gl.tzero = t
     
-    # #if gl.tempoDict["cycle"].tempo == 0:
+        data = get_server_message()
         
-        # #print("\nUpdate game with data server")
-        # #data = get_server_message()
-        
-        # #if data:
-            # #gl.image = get_image(data)
+        if data:
+            gl.image = get_image(data)
 
     # Ajout des plans pour cycle de 1 à 50 compris
     add_planes()
 
     # Effacement du tampon au début
-    if gl.tempoDict["360"].tempo == 60:
+    if gl.tempoDict["60"].tempo == 0:
         all_obj = scripts.blendergetobject.get_all_objects()
-        hide_herbe(all_obj)
+        
+        #hide_herbe_simple(all_obj)
+        hide_herbe_good(all_obj)

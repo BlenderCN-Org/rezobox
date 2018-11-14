@@ -60,10 +60,12 @@ def variable_init():
     gl.life = int(gl.conf["plane"]["life"])
     gl.largeur_plan = float(gl.conf["plane"]["largeur"])
     gl.tzero = time()
+    # Clé = tuple(x, y), valeur = z
+    gl.plane_dict = {}
     
 def tempo():
     gl.cycle = int(gl.conf["plane"]["cycle"])
-    tempo_liste = [("cycle", gl.cycle), ("360", 360), ("always", 99999)]
+    tempo_liste = [("cycle", gl.cycle), ("60", 60)]
     gl.tempoDict = Tempo(tempo_liste)
     
 def main():

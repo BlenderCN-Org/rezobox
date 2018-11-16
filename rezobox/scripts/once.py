@@ -62,6 +62,11 @@ def variable_init():
     gl.tzero = time()
     # Clé = tuple(x, y), valeur = z
     gl.plane_dict = {}
+
+def line():
+    gl.x_line = 0
+    gl.y_line = 0
+    gl.z_line = 0
     
 def tempo():
     gl.cycle = int(gl.conf["plane"]["cycle"])
@@ -80,6 +85,7 @@ def main():
     
     variable_init()
     tempo()
-
+    line()
+    
     # Pour les mondoshawan
     print("ok once.py")

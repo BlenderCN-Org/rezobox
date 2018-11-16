@@ -22,6 +22,7 @@ Lancé à chaque frame durant tout le jeu.
 
 import sys
 from time import time
+from math import sin, cos, tan
 
 import numpy as np
 import cv2
@@ -92,7 +93,8 @@ def add_object(obj, position, life, all_obj, game_scn):
     """
     empty = all_obj['Empty']
     empty.worldPosition = position
-    object_added = game_scn.addObject(obj, empty, life)
+    
+    return game_scn.addObject(obj, empty, life)
     
 def add_one_row_planes(image, row, all_obj, game_scn):
     """
@@ -127,7 +129,7 @@ def add_one_row_planes(image, row, all_obj, game_scn):
         # Ajout
         add_object("Plane", (x, y, z), gl.life, all_obj, game_scn)
 
-def add_planes():
+def add_planes(all_obj, game_scn):
     """ Ajout des plans par 2 colonnes
     """
     # nombre de colonne par frame = 2
@@ -142,9 +144,6 @@ def add_planes():
         # tempo = 0 1 2 ........50
         row -= 1
         if 2*cycle == row and gl.image is not None:
-            
-            all_obj = scripts.blendergetobject.get_all_objects()
-            game_scn = scripts.blendergetobject.get_scene_with_name('Labomedia')
             
             # Tranche verticale d'image de 1 colonne
             image_parts = gl.image[0:gl.y, row:row+1]
@@ -205,9 +204,6 @@ def hide_herbe_good(all_obj):
                 else:
                     all_obj[obj].visible = True
                     
-        # #print(gray_list)
-        # #print(points_list)
-                    
 def hide_herbe_simple(all_obj):
     """Cache tout"""
     for obj in all_obj:
@@ -246,7 +242,38 @@ def get_plane_vertices_position(obj):
         vertices_list.append([verts[i].x, verts[i].y, verts[i].z])
 
     return vertices_list
+
+def draw_line(all_obj, game_scn):
+    x = gl.x_line
+    y = gl.y_line
+    z = gl.z_line
+     
+    x += 0.08 * 2
+    if x > 5.5:
+        x = -5.5
+        
+    y = sin(x)/2
+    # pour faire descendre la sinusoide
+    # #y += x/5 
     
+    z = 1.43
+    
+    position = x, y, z
+    life = 30
+    obj = "ligne pixel"
+
+    # Ajout de l'objet
+    pixel = add_object(obj, position, life, all_obj, game_scn)
+
+    # Modification de l'objet ajouté
+    pixel.worldOrientation = 0, 0, 0.5 * cos(x)
+    pixel.localScale = 1.45, 1, 1
+
+    # Save values
+    gl.x_line = x
+    gl.y_line = y
+    gl.z_line = z    
+
 def main():
     """
     frame 0 update réseau
@@ -267,12 +294,15 @@ def main():
         if data:
             gl.image = get_image(data)
 
+    all_obj = scripts.blendergetobject.get_all_objects()
+    game_scn = scripts.blendergetobject.get_scene_with_name('Labomedia')
+            
     # Ajout des plans pour cycle de 1 à 50 compris
-    add_planes()
+    add_planes(all_obj, game_scn)
 
     # Effacement du tampon au début
     if gl.tempoDict["60"].tempo == 0:
         all_obj = scripts.blendergetobject.get_all_objects()
-        
-        #hide_herbe_simple(all_obj)
         hide_herbe_good(all_obj)
+
+    #draw_line(all_obj, game_scn)

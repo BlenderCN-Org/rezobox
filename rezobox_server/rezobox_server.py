@@ -20,13 +20,10 @@
 import os, sys
 from time import sleep
 import threading
-import json
-import ast
 
-from twisted.internet.protocol import DatagramProtocol
 from twisted.internet.endpoints import TCP4ServerEndpoint
 from twisted.internet.protocol import Protocol, Factory
-from twisted.internet import reactor, defer
+from twisted.internet import reactor
 
 from myconfig import MyConfig
 from kinect import Display

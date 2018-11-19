@@ -23,13 +23,13 @@ Lancé à chaque frame durant tout le jeu.
 import sys
 from time import time
 from math import sin, cos, tan
+import random
 
 import numpy as np
 import cv2
     
 from bge import logic as gl
 import scripts.blendergetobject
-
 
 def droiteAffine(x1, y1, x2, y2):
     """
@@ -138,7 +138,7 @@ def add_planes(all_obj, game_scn):
     # Compte de 0 à 50 compris, 51 repasse à 0
     cycle = gl.tempoDict["cycle"].tempo
     
-    # cycle = 0 récup réseau, puis de 1 à 50 et row de 0 à 99, gl.cycle=50
+    # cycle = 0 récup réseau, puis de 1 à 50 et row de 0 à 99
     for row in range(1, 100, 2):
         # row = 98 0 2 4 6 .... 96 98 0 2 
         # tempo = 0 1 2 ........50
@@ -274,10 +274,69 @@ def draw_line(all_obj, game_scn):
     gl.y_line = y
     gl.z_line = z    
 
+def get_gray_average():
+    # Valeur moyenne du gris
+    try:
+        moy = np.mean(gl.image)
+        print("Moyenne du gris =", moy)
+        return moy
+    except:
+        return 0
+
+def sound():
+    """
+        gl.sound["rose"].set_pitch(pitch)
+
+    try:
+        gl.sound["rose"].set_pitch(pitch)
+        gl.sound["rose"].play()
+    except:
+        print("ereur")
+    """
+    average = get_gray_average()
+    
+    try:
+        pitch = 1 + 110/average
+    except:
+        pitch = 1
+
+    factory = aud.Factory.sine(440*pitch)
+    
+    # play the audio, this return a handle to control play/pause
+    gl.handle = gl.device.play(factory)
+
+def sound_rose():
+    """gl.handle_rose =
+    ['__class__', '__delattr__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__gt__', '__hash__', '__init__', '__le__', '__lt__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', 'attenuation', 'cone_angle_inner', 'cone_angle_outer', 'cone_volume_outer', 'distance_maximum', 'distance_reference', 'keep', 'location', 'loop_count', 'orientation', 'pause', 'pitch', 'position', 'relative', 'resume', 'status', 'stop', 'velocity', 'volume', 'volume_maximum', 'volume_minimum']
+    
+    gl.factory = 
+    ['__class__', '__delattr__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__gt__', '__hash__', '__init__', '__le__', '__lt__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', 'buffer', 'delay', 'fadein', 'fadeout', 'file', 'filter', 'highpass', 'join', 'limit', 'loop', 'lowpass', 'mix', 'pingpong', 'pitch', 'reverse', 'sine', 'square', 'volume']
+
+    gl.factory.pitch = <built-in method pitch of aud.Factory object at 0x7f0b806fddd0>
+    
+    random.choice([1, 2, 3, 4, 5])
+    """
+    gl.factory.pitch(2.0)
+    gl.handle_rose = gl.device.play(gl.factory)
+    # ne change pas le pitch mais la durée
+    #gl.handle_rose.pitch = 0.80
+
+def sound_rose_stop():
+    try:
+        gl.handle_rose.stop()
+    except:
+        print("Pas de son en cours")
+         
+def sound_stop():
+    try:
+        gl.handle.stop()
+    except:
+        print("Pas de son en cours")
+    
 def main():
     """
     frame 0 update réseau
-    frame 1 à 65 affichage des 64 rows
+    frame 1 à 51 affichage des 25*2 rows
     """
     # Update des tempo
     gl.tempoDict.update()
@@ -285,6 +344,7 @@ def main():
     if gl.tempoDict["cycle"].tempo == 0:
         # calcul du FPS
         t = time()
+        print("\n     Début d'un cycle")
         print("Durée d' un cycle = {0:.2f} seconde".format(t - gl.tzero))
         print("    soit un FPS de {0:.0f}".format(51/(t - gl.tzero)))
         gl.tzero = t
@@ -294,15 +354,23 @@ def main():
         if data:
             gl.image = get_image(data)
 
+        # du son
+        #sound_rose()
+
+    #draw_line(all_obj, game_scn)
+    
     all_obj = scripts.blendergetobject.get_all_objects()
     game_scn = scripts.blendergetobject.get_scene_with_name('Labomedia')
             
     # Ajout des plans pour cycle de 1 à 50 compris
     add_planes(all_obj, game_scn)
 
-    # Effacement du tampon au début
-    if gl.tempoDict["60"].tempo == 0:
+    # Effacement de l'herbe
+    if gl.tempoDict["cycle"].tempo == 0:
         all_obj = scripts.blendergetobject.get_all_objects()
         hide_herbe_good(all_obj)
 
-    #draw_line(all_obj, game_scn)
+    # ## Stop son
+    # #if gl.tempoDict["cycle"].tempo == 51:
+        # #print("Stop du son")     
+        # #sound_rose_stop()

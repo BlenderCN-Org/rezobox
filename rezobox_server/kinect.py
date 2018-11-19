@@ -103,12 +103,13 @@ class Display(object):
         sandbox = self.kinect.get_sandbox(cropped)
         detected = self.kinect.get_detected(sandbox)
 
+        # Message à envoyer à Blender
         self.msg = array_to_bytes(detected)
         
         # #cv2.imshow('RGB image',frame)
-        big = change_resolution(detected, (640, 480))
+        big = change_resolution(detected, (640*2, 480*2))
         cv2.imshow('Kinect', big)
-            
+        
         # quit program when 'esc' key is pressed
         k = cv2.waitKey(5) & 0xFF
         if k == 27:
@@ -127,7 +128,7 @@ class Display(object):
             self.msg = array_to_bytes(detected)
             
             big = change_resolution(detected, (1066, 800))
-
+        
             # Display
             cv2.imshow('Kinect', big)
             

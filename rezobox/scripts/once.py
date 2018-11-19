@@ -25,10 +25,12 @@ Seuls les attributs de logic sont stockés en permanence.
 
 from time import time
 from bge import logic as gl
+import aud
 
 from scripts.myconfig import MyConfig
 from scripts.tcpclient3 import TcpClient3
 from scripts.blendertempo import Tempo
+from scripts.blendersound import EasyAudio
 
 def get_conf():
     """Récupère la configuration depuis le fichier *.ini."""
@@ -70,9 +72,16 @@ def line():
     
 def tempo():
     gl.cycle = int(gl.conf["plane"]["cycle"])
-    tempo_liste = [("cycle", gl.cycle), ("60", 60)]
+    tempo_liste = [("cycle", gl.cycle)]
     gl.tempoDict = Tempo(tempo_liste)
+
+def sound_rose():
+
+    gl.device = aud.device()
     
+    # load sound file (it can be a video file with audio)
+    gl.factory = aud.Factory('/media/data/3D/projets/rezobox/rezobox/sound/rose.ogg')
+
 def main():
     """Lancé une seule fois à la 1ère frame au début du jeu par main_once."""
 
@@ -86,6 +95,7 @@ def main():
     variable_init()
     tempo()
     line()
+    sound_rose()
     
     # Pour les mondoshawan
     print("ok once.py")

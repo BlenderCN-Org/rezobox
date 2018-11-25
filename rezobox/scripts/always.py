@@ -120,14 +120,11 @@ def add_one_row_planes(image, row, all_obj, game_scn):
         # image[h][0] de 0 à 94
         p = image[h][0]
 
-        # 0 à 20 => 1.45, > 94 => -1.5
-        if p <= 20:
-            z = 1.45
-        else:
-            a, b = -0.04094, 2.3689
-            z = a * p + b
-            if z > 1.48:
-                z = 1.48
+
+        a, b = -0.04094, 2.3689
+        z = a * p + b
+        if z > 1.48:
+            z = 1.48
                 
         # Ajout
         add_object("Plane", (x, y, z), gl.life, all_obj, game_scn)

@@ -4,4 +4,4 @@
 
 cd rezobox_server
 
-python3 rezobox_server.py
+python rezobox_server.py

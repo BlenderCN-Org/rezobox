@@ -95,11 +95,8 @@ class MyTcpServerFactory(Factory):
         global CONF
         self.loop = 1
 
-        if CONF['image']['trackbars']:
-            self.display = Display(conf_obj)
-        else:
-            self.display = DisplayWithoutTrackbars(CONF)
-        
+        self.display = Display(conf_obj)
+
         self.kinect_thread()
     
         # Suivi des clients

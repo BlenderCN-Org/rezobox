@@ -103,21 +103,24 @@ def add_one_row_planes(image, row, all_obj, game_scn):
         un plan = 11/100 = 0,110
 
     """
+    
+    # plan de coté = pas de 11/100 = 0,110
     lp = gl.largeur_plan
     
     for h in range(gl.y):
-        # plan de coté = pas de 11/128 = 0,0859375, 96*0,0859375=8.25
+        # longueur du box: 100 * 0.110 = 11.0
+        # largeur  du box:  75 * 0.110 = 8.25
 
-        # row de 0 à 63 ( row pas + demi pas - demi hauteur de box )
+        # row de 0 à 63 ( row pas + demi pas - demi longueur de box )
         x = row*lp + lp/2 - 5.5
 
-        # -( h pas + demi pas - demi hauteur de box )
+        # -( h pas + demi pas - demi largeur de box )
         y = - (h*lp + lp/2 - 4.125)
                 
         # image[h][0] de 0 à 94
         p = image[h][0]
 
-        # 0 à 20 => 1.55, 94 => -1.5
+        # 0 à 20 => 1.45, > 94 => -1.5
         if p <= 20:
             z = 1.45
         else:
@@ -305,6 +308,12 @@ def sound():
     # play the audio, this return a handle to control play/pause
     gl.handle = gl.device.play(factory)
 
+def sound_stop():
+    try:
+        gl.handle.stop()
+    except:
+        print("Pas de son en cours")
+  
 def sound_rose():
     """gl.handle_rose =
     ['__class__', '__delattr__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__gt__', '__hash__', '__init__', '__le__', '__lt__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', 'attenuation', 'cone_angle_inner', 'cone_angle_outer', 'cone_volume_outer', 'distance_maximum', 'distance_reference', 'keep', 'location', 'loop_count', 'orientation', 'pause', 'pitch', 'position', 'relative', 'resume', 'status', 'stop', 'velocity', 'volume', 'volume_maximum', 'volume_minimum']
@@ -316,23 +325,16 @@ def sound_rose():
     
     random.choice([1, 2, 3, 4, 5])
     """
-    gl.factory.pitch(2.0)
-    gl.handle_rose = gl.device.play(gl.factory)
     # ne change pas le pitch mais la durée
-    #gl.handle_rose.pitch = 0.80
+    gl.factory.pitch(10.0)
+    gl.handle_rose = gl.device.play(gl.factory)
 
 def sound_rose_stop():
     try:
         gl.handle_rose.stop()
     except:
         print("Pas de son en cours")
-         
-def sound_stop():
-    try:
-        gl.handle.stop()
-    except:
-        print("Pas de son en cours")
-    
+           
 def main():
     """
     frame 0 update réseau
@@ -355,7 +357,7 @@ def main():
             gl.image = get_image(data)
 
         # du son
-        #sound_rose()
+        sound_rose()
 
     #draw_line(all_obj, game_scn)
     
@@ -370,7 +372,7 @@ def main():
         all_obj = scripts.blendergetobject.get_all_objects()
         hide_herbe_good(all_obj)
 
-    # ## Stop son
-    # #if gl.tempoDict["cycle"].tempo == 51:
-        # #print("Stop du son")     
-        # #sound_rose_stop()
+    # Stop son
+    if gl.tempoDict["cycle"].tempo == 51:
+        print("Stop du son")     
+        sound_rose_stop()

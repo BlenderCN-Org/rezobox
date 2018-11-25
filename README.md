@@ -49,12 +49,67 @@ sudo pip3 install numpy
 sudo pip3 install twisted
 ~~~
 
+#### Git
+~~~text
+sudo apt-get install git
+git clone https://github.com/sergeLabo/rezobox.git
+~~~
+
+Mise à jour dans le dossier
+~~~text
+git pull
+~~~
+
 ### Exécution du jeu
 #### Kinect
 Double clic sur clic_to_run_kinect
 
 #### Blender
 Double clic sur clic_to_run_game
+
+### Définitions des valeurs dans les fichiers *.ini
+#### rezobox_server.ini
+
+**server**
+
+* port = 8888
+* ip = "127.0.0.1"
+* tempo = 0.8
+
+**image**
+
+* trackbars = avec ou sans trackbars, ne marche pas avec le serveur = 0 ou 1
+* thread = pour test dans kinect.py, simule le serveur; 0 ou 1
+* x = hauteur de l'image reçue du serveur = 75
+* y = largeur de l'image reçue du serveur = 100
+* mini = 66 gris mini
+* maxi = 80 gris maxi
+
+**crop**
+* y = coupe en haut 138
+* h = coupe en bas 64
+* x = coupe à gauche 89
+* w = coupe à droite 156
+
+#### resobox.ini pour Blender
+
+**tcp**
+
+* ip = "127.0.0.1"
+* port = 8888
+
+**image**
+
+* y = hauteur de l'image reçue du serveur = 75
+* x = largeur de l'image reçue du serveur = 100
+* gray = si gris < gray, l'herbe est invisible
+
+**plane**
+
+* life = durée d vie des plans ajoutés = 45 frames
+* cycle = Nombre de frames par cycle, 1 pour le réseau, 50 pour l'affichage des plans soit 51
+* largeur = largeur des plans carrés ajoutés à chercher dans le layer 2 = 0.110
+
 
 ### Merci à:
 

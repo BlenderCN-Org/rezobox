@@ -30,8 +30,10 @@ from kinect import Display
 
 # Variable globale
 scr = os.path.dirname(os.path.abspath(__file__))
-conf = MyConfig(scr + "/rezobox_server.ini")
-CONF = conf.conf
+
+# L'object configuration
+conf_obj = MyConfig(scr + "/rezobox_server.ini")
+CONF = conf_obj.conf
 print("Configuration du serveur: {}\n".format(CONF))
 
 TCP_PORT = CONF["server"]["port"]
@@ -87,12 +89,19 @@ class MyTcpServerFactory(Factory):
     """
     Le self d'ici sera self.factory dans les objets MyTcpServer.
     """
+    global TO_BLEND, CONF
 
     def __init__(self):
+        global CONF
         self.loop = 1
-        self.display = Display(CONF)
-        self.kinect_thread()
+
+        if CONF['image']['trackbars']:
+            self.display = Display(conf_obj)
+        else:
+            self.display = DisplayWithoutTrackbars(CONF)
         
+        self.kinect_thread()
+    
         # Suivi des clients
         self.numProtocols = 1
         
@@ -102,13 +111,14 @@ class MyTcpServerFactory(Factory):
     def buildProtocol(self, addr):
         print("Nouveau protocol crée dans l'usine: factory")
         print("Nombre de protocol dans factory", self.numProtocols)
+
         # le self permet l'accès à self.factory dans MyTcpServer
-        
         return MyTcpServer(self)
 
     def kinect_loop(self):
         global TO_BLEND
         while self.loop:
+            print TEMPO
             sleep(TEMPO)
             self.display.one_loop()
             TO_BLEND = self.display.msg

@@ -182,9 +182,6 @@ class Display(object):
 
         depth = self.kinect.get_depth()
 
-        # Affichage capture originale
-        cv2.imshow('Capture original', depth)
-
         # Capture des positions des sliders
         if self.trbr:
             self.y = cv2.getTrackbarPos('y','Capture original')
@@ -194,13 +191,9 @@ class Display(object):
         
         # Image coupée sur les bords
         cropped = self.kinect.get_cropped(depth, self.y, self.h, self.x, self.w)
-        # Affichage de l'image coupée
-        cv2.imshow('Capture cropped', cropped)
 
         # Masque sur gris mini maxi
         sandbox, mask = self.kinect.get_sandbox(cropped, self.mini, self.maxi)
-        cv2.imshow('Masque', mask)
-        cv2.imshow('Sandbox', sandbox)
 
         # Résoltution à 100x75, sera envoyé à Blender
         detected = self.kinect.get_detected(sandbox)
@@ -209,7 +202,9 @@ class Display(object):
         self.msg = array_to_bytes(detected)
         
         big = change_resolution(detected, (640, 480))
-        cv2.imshow('Kinect finale', big)
+
+        # Affichage des fenêtres
+        self.windows(depth, cropped, mask, sandbox, detected, big)
         
         # quit program when 'esc' key is pressed
         k = cv2.waitKey(5) & 0xFF
@@ -217,7 +212,33 @@ class Display(object):
             self.loop = 0
             cv2.destroyAllWindows()
 
+    def windows(self, depth, cropped, mask, sandbox, detected, big):
+        
+        # Affichage capture originale
+        if self.conf["image"]["depth"]:
+            cv2.imshow('Capture original', depth)
+        
+        # Affichage de l'image coupée
+        if self.conf["image"]["cropped"]:
+            cv2.imshow('Capture cropped', cropped)
 
+        # Masque des mini maxi
+        if self.conf["image"]["mask"]:        
+            cv2.imshow('Masque', mask)
+
+        # Bac à sabble
+        if self.conf["image"]["sandbox"]:        
+            cv2.imshow('Sandbox', sandbox)
+
+        # Image finale échelle 1
+        if self.conf["image"]["detected"]:       
+            cv2.imshow('Kinect finale brute', detected)
+            
+        # Image finale aggrandie
+        if self.conf["image"]["big"]:        
+            cv2.imshow('Kinect finale aggrandie', big)
+
+        
 def get_default_image():
     scr = os.path.dirname(os.path.abspath(__file__))
     img = cv2.imread(scr + "/images/depth_640_480.png", 0)

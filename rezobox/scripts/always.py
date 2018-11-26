@@ -50,13 +50,13 @@ def get_server_message():
     try:
         data = gl.clt.listen(16384)
         print("\nMessage reçu: taille =", str(sys.getsizeof(data)))
+        print("    en {0:.2f} seconde".format(time() - t0))
         # Prends beucoup trop de temps
         #gl.clt.clear_buffer(16384)
     except:
         data = None
         print("Pas de réception sur le client TCP")
-    print("    en {0:.2f} seconde".format(time() - t0))
-    
+
     return data
 
 def get_image(data):
@@ -343,11 +343,13 @@ def main():
     if gl.tempoDict["cycle"].tempo == 0:
         # calcul du FPS
         t = time()
-        print("\n     Début d'un cycle")
+
         print("Durée d' un cycle = {0:.2f} seconde".format(t - gl.tzero))
         print("    soit un FPS de {0:.0f}".format(51/(t - gl.tzero)))
         gl.tzero = t
-    
+
+        print("\n     Début d'un cycle")
+            
         data = get_server_message()
         
         if data:

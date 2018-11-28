@@ -85,7 +85,17 @@ Double clic sur clic_to_run_game
 * mini = 66 gris mini
 * maxi = 80 gris maxi
 
+** Affichage de Fenêtre OpenCv **
+
+* depth = 0 image brute sortie kinect
+* cropped = 0 image coupée autour
+* mask = 0 mask avec mini maxi
+* sandbox = 0 sortie avec le masque appliqué
+* detected = 1 ce qui est envoyé à Blender
+* big = 0 = detected aggrandi
+
 **crop**
+
 * y = coupe en haut 138
 * h = coupe en bas 64
 * x = coupe à gauche 89

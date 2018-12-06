@@ -356,7 +356,7 @@ def main():
             gl.image = get_image(data)
 
         # du son
-        sound_rose()
+        #sound_rose()
 
     #draw_line(all_obj, game_scn)
     
@@ -371,7 +371,7 @@ def main():
         all_obj = scripts.blendergetobject.get_all_objects()
         hide_herbe_good(all_obj)
 
-    # Stop son
-    if gl.tempoDict["cycle"].tempo == 51:
-        print("Stop du son")     
-        sound_rose_stop()
+    # ## Stop son
+    # #if gl.tempoDict["cycle"].tempo == 51:
+        # #print("Stop du son")     
+        # #sound_rose_stop()

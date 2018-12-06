@@ -122,7 +122,7 @@ def add_one_row_planes(image, row, all_obj, game_scn):
 
 
         a, b = -0.04094, 2.3689
-        z = a * p + b
+        z = a * p + b -0.2
         if z > 1.48:
             z = 1.48
                 

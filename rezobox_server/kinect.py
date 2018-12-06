@@ -202,7 +202,9 @@ class Display(object):
         self.msg = array_to_bytes(detected)
         
         big = change_resolution(detected, (640, 480))
-
+        # Test trapèze
+        # ##big = perspective_transformation(big)
+        
         # Affichage des fenêtres
         self.windows(depth, cropped, mask, sandbox, detected, big)
         
@@ -238,7 +240,26 @@ class Display(object):
         if self.conf["image"]["big"]:        
             cv2.imshow('Kinect finale aggrandie', big)
 
-        
+
+def perspective_transformation(img):
+    A =  [56, 65]
+    AA = [0, 0]
+    B =  [368, 52]
+    BB = [300, 0]
+    C =  [28, 387]
+    CC = [0, 300]
+    D =  [389, 390]
+    DD = [300, 300]
+    
+    pts1 = np.float32([ A,  B,  C, D ])
+    pts2 = np.float32([AA, BB, CC, DD])
+    
+    M = cv2.getPerspectiveTransform(pts1, pts2)
+    # Taille image finale = 300, 300
+    dst = cv2.warpPerspective(img, M, (300, 300))
+
+    return dst
+     
 def get_default_image():
     scr = os.path.dirname(os.path.abspath(__file__))
     img = cv2.imread(scr + "/images/depth_640_480.png", 0)

@@ -38,13 +38,13 @@ sudo apt-get install blender
 
 #### Python
 ~~~text
-sudo apt-get install python-dev python-setuptools
+sudo apt-get install python-dev python-setuptools pip pip3
 sudo pip install twisted
-sudo pip install opencv
+sudo pip install opencv-python
 sudo pip install numpy
 
 sudo apt-get install python3-dev python3-setuptools
-sudo pip3 install opencv
+sudo pip3 install opencv-python
 sudo pip3 install numpy
 sudo pip3 install twisted
 ~~~

@@ -31,31 +31,22 @@ More in file License GPL V3.
 * Novembre 2018
 
 ### Installation
-#### Blender
+
 ~~~text
-sudo apt-get install blender
+sudo apt-get install blender git python-dev python-setuptools python-pip python3-pip python-freenect python3-dev python3-setuptools
+
+sudo pip install twisted numpy opencv-python
+sudo pip3 install twisted numpy opencv-python
 ~~~
 
-#### Python
-~~~text
-sudo apt-get install python-dev python-setuptools pip pip3
-sudo pip install twisted
-sudo pip install opencv-python
-sudo pip install numpy
+#### Récupération des sources sur GitHub
 
-sudo apt-get install python3-dev python3-setuptools
-sudo pip3 install opencv-python
-sudo pip3 install numpy
-sudo pip3 install twisted
-~~~
-
-#### Git
 ~~~text
-sudo apt-get install git
 git clone https://github.com/sergeLabo/rezobox.git
 ~~~
 
 Mise à jour dans le dossier
+
 ~~~text
 git pull
 ~~~

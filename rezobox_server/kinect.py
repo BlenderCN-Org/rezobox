@@ -209,7 +209,7 @@ class Display(object):
         self.windows(depth, cropped, mask, sandbox, detected, big)
         
         # quit program when 'esc' key is pressed
-        k = cv2.waitKey(5) & 0xFF
+        k = cv2.waitKey(30) & 0xFF
         if k == 27:
             self.loop = 0
             cv2.destroyAllWindows()

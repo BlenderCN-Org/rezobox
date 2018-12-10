@@ -204,12 +204,6 @@ def hide_herbe_good(all_obj):
                 else:
                     all_obj[obj].visible = True
                     
-def hide_herbe_simple(all_obj):
-    """Cache tout"""
-    for obj in all_obj:
-        if "herbe" in obj:
-            all_obj[obj].visible = False
-
 def get_position(plan):
     """Le centre de l'objet est 0,0,0
     je calcule la position d e la moyenne des 4 vertices du plan
@@ -312,16 +306,6 @@ def sound_stop():
         print("Pas de son en cours")
   
 def sound_rose():
-    """gl.handle_rose =
-    ['__class__', '__delattr__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__gt__', '__hash__', '__init__', '__le__', '__lt__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', 'attenuation', 'cone_angle_inner', 'cone_angle_outer', 'cone_volume_outer', 'distance_maximum', 'distance_reference', 'keep', 'location', 'loop_count', 'orientation', 'pause', 'pitch', 'position', 'relative', 'resume', 'status', 'stop', 'velocity', 'volume', 'volume_maximum', 'volume_minimum']
-    
-    gl.factory = 
-    ['__class__', '__delattr__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__gt__', '__hash__', '__init__', '__le__', '__lt__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', 'buffer', 'delay', 'fadein', 'fadeout', 'file', 'filter', 'highpass', 'join', 'limit', 'loop', 'lowpass', 'mix', 'pingpong', 'pitch', 'reverse', 'sine', 'square', 'volume']
-
-    gl.factory.pitch = <built-in method pitch of aud.Factory object at 0x7f0b806fddd0>
-    
-    random.choice([1, 2, 3, 4, 5])
-    """
     # ne change pas le pitch mais la durée
     gl.factory.pitch(10.0)
     gl.handle_rose = gl.device.play(gl.factory)

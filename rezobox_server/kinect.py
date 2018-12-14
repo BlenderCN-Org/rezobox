@@ -200,8 +200,11 @@ class Display(object):
 
         # Message à envoyer à Blender
         self.msg = array_to_bytes(detected)
+
+        # Affichage en grand de l'image envoyée à blender
+        k = 2
+        big = change_resolution(detected, (int(640*k), int(480*2)))
         
-        big = change_resolution(detected, (640, 480))
         # Test trapèze
         # ##big = perspective_transformation(big)
         

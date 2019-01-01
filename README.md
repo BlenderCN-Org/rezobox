@@ -1,7 +1,7 @@
 # rezobox
 Creuser et trouver des réseaux post-neuronaux.
 
-![ReZobox](https://ressources.labomedia.org/_media/rezobox_rendu_3.jpg)
+![ReZobox](/rezobox_rendu_3.jpg)
 
 
 ### Très inspiré de [AR Sandbox](https://arsandbox.ucdavis.edu/)

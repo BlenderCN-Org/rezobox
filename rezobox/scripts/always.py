@@ -176,9 +176,8 @@ def hide_herbe_good(all_obj):
         # Mirror sur x: 0 = h, 1 = v, -1 = both
         img = cv2.flip(img, 0)
 
-        gray_list = []
-        points_list = []
         gray_ref = gl.conf["image"]["gray"]
+        
         # Parcours des objets "herbe"
         for obj in all_obj:
             if "herbe" in obj:
@@ -194,15 +193,14 @@ def hide_herbe_good(all_obj):
                 # de 0 à 30, il faut 0 à 39 inclus
                 y = int(4 * (y_herbes + 4.125) * 36 / 30)
                 
-                points_list.append(x)
-                
                 gray = img[y][x]
-                gray_list.append(gray)
                 
                 if gray >= gray_ref:
-                    all_obj[obj].visible = False
+                    if all_obj[obj].visible == True: 
+                        all_obj[obj].visible = False
                 else:
-                    all_obj[obj].visible = True
+                    if all_obj[obj].visible == False:
+                        all_obj[obj].visible = True
                     
 def get_position(plan):
     """Le centre de l'objet est 0,0,0
@@ -236,38 +234,7 @@ def get_plane_vertices_position(obj):
         vertices_list.append([verts[i].x, verts[i].y, verts[i].z])
 
     return vertices_list
-
-def draw_line(all_obj, game_scn):
-    x = gl.x_line
-    y = gl.y_line
-    z = gl.z_line
-     
-    x += 0.08 * 2
-    if x > 5.5:
-        x = -5.5
-        
-    y = sin(x)/2
-    # pour faire descendre la sinusoide
-    # #y += x/5 
     
-    z = 1.43
-    
-    position = x, y, z
-    life = 30
-    obj = "ligne pixel"
-
-    # Ajout de l'objet
-    pixel = add_object(obj, position, life, all_obj, game_scn)
-
-    # Modification de l'objet ajouté
-    pixel.worldOrientation = 0, 0, 0.5 * cos(x)
-    pixel.localScale = 1.45, 1, 1
-
-    # Save values
-    gl.x_line = x
-    gl.y_line = y
-    gl.z_line = z    
-
 def get_gray_average():
     # Valeur moyenne du gris
     try:
@@ -338,11 +305,6 @@ def main():
         
         if data:
             gl.image = get_image(data)
-
-        # du son
-        #sound_rose()
-
-    #draw_line(all_obj, game_scn)
     
     all_obj = scripts.blendergetobject.get_all_objects()
     game_scn = scripts.blendergetobject.get_scene_with_name('Labomedia')
@@ -354,8 +316,3 @@ def main():
     if gl.tempoDict["cycle"].tempo == 0:
         all_obj = scripts.blendergetobject.get_all_objects()
         hide_herbe_good(all_obj)
-
-    # ## Stop son
-    # #if gl.tempoDict["cycle"].tempo == 51:
-        # #print("Stop du son")     
-        # #sound_rose_stop()

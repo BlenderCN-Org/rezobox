@@ -4,6 +4,7 @@
 
 # divers
 old/
+doc/
 
 # Python test
 *_old.py
